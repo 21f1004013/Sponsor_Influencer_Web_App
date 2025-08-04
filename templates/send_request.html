@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Send Request</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h2>Send Request for Campaign: {{ campaign.name|capitalize }}</h2>
+        <form method="POST" action="{{ url_for('send_request', campaign_id=campaign.id) }}">
+            <div class="form-group">
+                <label for="influencer_id">Select Influencer:</label>
+                <select id="influencer_id" name="influencer_id" class="form-control">
+                    {% for influencer in influencers %}
+                    <option value="{{ influencer.id }}">{{ influencer.username|capitalize }} <br>
+                    Category:{{ influencer.category}} <br>
+                    Niche:{{ influencer.niche}} <br>
+                    {{ influencer.reach}} <br></option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="messages">Messages:</label>
+                <textarea id="messages" name="messages" class="form-control"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="requirements">Requirements:</label>
+                <textarea id="requirements" name="requirements" class="form-control"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="payment_amount">Payment Amount:</label>
+                <input type="number" id="payment_amount" name="payment_amount" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-primary">Send Request</button>
+        </form>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        // JavaScript to make flash messages disappear after 3 seconds
+        window.setTimeout(function() {
+            var messages = document.getElementById("flash-messages");
+            if (messages) {
+                messages.style.transition = "opacity 1s ease-in-out";
+                messages.style.opacity = "0";
+                setTimeout(function() {
+                    messages.remove();
+                }, 1000);
+            }
+        }, 3000);
+    </script>
+</body>
+</html>

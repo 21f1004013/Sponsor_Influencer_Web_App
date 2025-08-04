@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sponsor Dashboard</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="/sponsor_dashboard">Sponsor</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/sponsor_dashboard">Profile</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href='/spon_camp_list'>Campaigns</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/sponsor_requests">Requests</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href='/sponsor_find_dashboard'>Find</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Flash messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="alert alert-dismissible fade show">
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <div class="container mt-5">
+        <h2>Welcome Sponsor {{ current_user.username|capitalize }}</h2>
+        <!-- Pending Requests -->
+        <div class="card mt-3">
+            <div class="card-header bg-warning text-white">
+                Pending Requests
+            </div>
+            <div class="card-body">
+                {% if pending_requests %}
+                    <ul class="list-group">
+                        {% for request in pending_requests %}
+                            <li class="list-group-item">
+                                <strong>Campaign:</strong> {{ request.campaign.name|capitalize }}<br>
+                                <strong>Influencer:</strong> {{ request.influencer.username|capitalize }}<br>
+                                <strong>Requirements:</strong> {{ request.requirements|capitalize }}<br>
+                                <strong>Payment Amount:</strong> {{ request.payment_amount }}<br>
+                                <strong>Status:</strong> {{ request.status|capitalize }}
+                                <form method="POST" action="{{ url_for('delete_request', request_id=request.id) }}" class="mt-2">
+                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                </form>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>No pending requests.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Accepted Requests -->
+        <div class="card mt-3">
+            <div class="card-header bg-success text-white">
+                Accepted Requests
+            </div>
+            <div class="card-body">
+                {% if accepted_requests %}
+                    <ul class="list-group">
+                        {% for request in accepted_requests %}
+                            <li class="list-group-item">
+                                <strong>Campaign:</strong> {{ request.campaign.name|capitalize }}<br>
+                                <strong>Influencer:</strong> {{ request.influencer.username|capitalize }}<br>
+                                <strong>Requirements:</strong> {{ request.requirements|capitalize }}<br>
+                                <strong>Payment Amount:</strong> {{ request.payment_amount }}<br>
+                                <strong>Status:</strong> {{ request.status|capitalize }}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>No accepted requests.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Rejected Requests -->
+        <div class="card mt-3">
+            <div class="card-header bg-danger text-white">
+                Rejected Requests
+            </div>
+            <div class="card-body">
+                {% if rejected_requests %}
+                    <ul class="list-group">
+                        {% for request in rejected_requests %}
+                            <li class="list-group-item">
+                                <strong>Campaign:</strong> {{ request.campaign.name|capitalize }}<br>
+                                <strong>Influencer:</strong> {{ request.influencer.username|capitalize }}<br>
+                                <strong>Requirements:</strong> {{ request.requirements|capitalize }}<br>
+                                <strong>Payment Amount:</strong> {{ request.payment_amount }}<br>
+                                <strong>Status:</strong> {{ request.status|capitalize }}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>No rejected requests.</p>
+                {% endif %}
+            </div>            
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        // JavaScript to make flash messages disappear after 3 seconds
+        window.setTimeout(function() {
+            var messages = document.getElementById("flash-messages");
+            if (messages) {
+                messages.style.transition = "opacity 1s ease-in-out";
+                messages.style.opacity = "0";
+                setTimeout(function() {
+                    messages.remove();
+                }, 1000);
+            }
+        }, 3000);
+    </script>
+</body>
+</html>

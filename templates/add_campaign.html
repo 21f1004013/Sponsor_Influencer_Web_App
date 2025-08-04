@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Campaign</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="/sponsor_dashboard">Sponsor Dashboard</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/add_campaign">Add Campaign</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/spon_camp_list">Campaigns</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Flash messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="alert alert-dismissible fade show">
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <div class="container mt-5">
+        <h2>Add New Campaign</h2>
+        <form method="POST" action="{{ url_for('add_campaign') }}">
+            <div class="form-group">
+                <label for="name">Campaign Name</label>
+                <input type="text" class="form-control" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="enddate">Campaign End Date</label>
+                <input type="date" class="form-control" id="enddate" name="enddate" required>
+            </div>
+            <div class="form-group">
+                <label for="budget">Budget</label>
+                <input type="number" class="form-control" id="budget" name="budget" required>
+            </div>
+            <div class="form-group">
+                <label for="visibility">Visibility:</label>
+                <select class="form-control" id="visibility" name="visibility" required>
+                    <option value="public">Public</option>
+                    <option value="private">Private</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Add Campaign</button>
+        </form>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        // JavaScript to make flash messages disappear after 3 seconds
+        window.setTimeout(function() {
+            var messages = document.getElementById("flash-messages");
+            if (messages) {
+                messages.style.transition = "opacity 1s ease-in-out";
+                messages.style.opacity = "0";
+                setTimeout(function() {
+                    messages.remove();
+                }, 1000);
+            }
+        }, 3000);
+    </script>
+</body>
+</html>

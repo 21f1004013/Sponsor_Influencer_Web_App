@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Campaign</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="/sponsor_dashboard">Sponsor Dashboard</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/spon_camp_list">Campaigns</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('add_campaign') }}">Add Campaign</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Flash messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="alert alert-dismissible fade show">
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <!-- Newly Added Campaigns -->
+    <div class="card mt-3">
+        <div class="card-body">
+            {% if campaigns %}
+                <ul class="list-group">
+                    {% for campaign in campaigns %}
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title">Name: {{ campaign.name|capitalize }}<br>
+                                Description: {{ campaign.description|capitalize }}<br>
+                                Start Date: {{ campaign.start_date.strftime('%Y-%m-%d') }}<br>
+                                End Date: {{ campaign.end_date.strftime('%Y-%m-%d') }}<br>
+                                Budget: ${{ campaign.budget }}<br>
+                                Visibility: {{ campaign.visibility|capitalize }}<br></h5>
+                            <a href="{{ url_for('send_request',campaign_id =campaign.id) }}" class="btn btn-warning">Send Request</a>
+                            <a href="{{ url_for('edit_campaign',campaign_id =campaign.id) }}" class="btn btn-warning">Edit</a>
+                            <a href="{{ url_for('delete_campaign',campaign_id =campaign.id) }}" class="btn btn-warning">Delete</a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No newly added campaigns.</p>
+            {% endif %}
+        </div>
+    </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        // JavaScript to make flash messages disappear after 3 seconds
+        window.setTimeout(function() {
+            var messages = document.getElementById("flash-messages");
+            if (messages) {
+                messages.style.transition = "opacity 1s ease-in-out";
+                messages.style.opacity = "0";
+                setTimeout(function() {
+                    messages.remove();
+                }, 1000);
+            }
+        }, 3000);
+    </script>
+</body>
+</html>

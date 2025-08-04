@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sponsor Requests</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Sponsor</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/sponsor_dashboard">Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/sponsor_requests">Requests</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1>Requests</h1>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Campaign</th>
+                    <th>Influencer</th>
+                    <th>Message</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for request, influencer_name, campaign_name in requests %}
+                <tr>
+                    <td>{{ campaign_name|capitalize }}</td>
+                    <td>{{ influencer_name|capitalize }}</td>
+                    <td>{{ request.messages|capitalize }}</td>
+                    <td>{{ request.status|capitalize }}</td>
+                    <td>
+                        {% if request.status == 'Pending' %}
+                        <form method="POST" action="{{ url_for('sponsor_respond_request', request_id=request.id) }}">
+                            <button type="submit" name="response" value="accept" class="btn btn-success">Accept</button>
+                            <button type="submit" name="response" value="reject" class="btn btn-danger">Reject</button>
+                        </form>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="container">
+        <h1>Negotiate Requests</h1>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Campaign</th>
+                    <th>Influencer</th>
+                    <th>Message</th>
+                    <th>Requirements</th>
+                    <th>Payment Amount</th>
+                    <th>Negotiated Amount</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for request, influencer_name, campaign_name in nego_requests %}
+                {% if request.negotiation_status == 'Proposed' %}
+                <tr>
+                    <td>{{ campaign_name|capitalize }}</td>
+                    <td>{{ influencer_name|capitalize }}</td>
+                    <td>{{ request.messages|capitalize }}</td>
+                    <td>{{ request.requirements|capitalize }}</td>
+                    <td>{{ request.payment_amount }}</td>
+                    <td>{{ request.negotiated_amount or 'N/A' }}</td>
+                    <td>{{ request.status|capitalize }}</td>
+                    <td>
+                        {% if request.negotiation_status == 'Proposed' %}
+                        <form method="POST" action="{{ url_for('respond_negotiation', request_id=request.id) }}">
+                            <button type="submit" name="response" value="accept" class="btn btn-success">Accept</button>
+                            <button type="submit" name="response" value="reject" class="btn btn-danger">Reject</button>
+                        </form>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

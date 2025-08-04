@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Admin Dashboard</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin_dashboard">Info</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/stats">Stats</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin_find_dashboard">Find</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Flash messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div id="flash-messages" class="alert alert-dismissible fade show">
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <div class="container mt-5">
+        <h2>Welcome Admin {{ current_user.username|capitalize }}</h2>
+    <!-- Ongoing Campaigns Section -->
+    <h3 class="mt-5">Campaign:</h3>
+    <div class="list-group">
+        {% for campaign in campaigns %}
+            <div class="list-group-item d-flex justify-content-between align-items-center">
+                <span>{{ campaign.name|capitalize }}</span>
+                <div>
+                    {% if campaign.flagged == True %}
+                        <form method="POST" action="{{ url_for('unblock_campaign', campaign_id=campaign.id) }}" style="display:inline;">
+                            <button type="submit" class="btn btn-unblock btn-sm">Unblock</button>
+                        </form>
+                        {% else %}
+                        <form method="POST" action="{{ url_for('block_campaign', campaign_id=campaign.id) }}" style="display:inline;">
+                            <button type="submit" class="btn btn-unblock btn-sm">Block</button>
+                        </form>
+                    {% endif %}
+                    <a href="{{ url_for('view_campaign', campaign_id=campaign.id) }}" class="btn btn-warning">View</a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Flagged Users Section -->
+    <h3 class="mt-5">Users:</h3>
+    <div class="list-group">
+        {% for user in users %}
+        {% if user.role == 'influencer' or user.role == 'sponsor' %}
+            <div class="list-group-item d-flex justify-content-between align-items-center">
+                <span>{{ user.username|capitalize }} | {{ user.role|capitalize }}</span>
+                <div>
+                    {% if user.blocked == True %}
+                        <form method="POST" action="{{ url_for('unblock_user', user_id=user.id) }}" style="display:inline;">
+                            <button type="submit" class="btn btn-unblock btn-sm">Unblock</button>
+                        </form>
+                        {% else %}
+                        <form method="POST" action="{{ url_for('block_user', user_id=user.id) }}" style="display:inline;">
+                            <button type="submit" class="btn btn-unblock btn-sm">Block</button>
+                        </form>
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+</div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        // JavaScript to make flash messages disappear after 3 seconds
+        window.setTimeout(function() {
+            var messages = document.getElementById("flash-messages");
+            if (messages) {
+                messages.style.transition = "opacity 1s ease-in-out";
+                messages.style.opacity = "0";
+                setTimeout(function() {
+                    messages.remove();
+                }, 1000);
+            }
+        }, 3000);
+    </script>
+</body>
+</html>

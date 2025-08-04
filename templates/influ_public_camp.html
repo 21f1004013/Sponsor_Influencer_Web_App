@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Influencer Dashboard</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="/influencer_dashboard">Influencer</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/influencer_dashboard">Profile</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href='/view_requests'>Requests</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Flash messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="alert alert-dismissible fade show">
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <div class="container">
+        <h1>Welcome Influencer {{ current_user.username|capitalize }}</h1>
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <h4>Find Campaigns</h4>
+                <form class="form-inline mb-3" action="{{ url_for('search') }}" method="POST">
+                    <input class="form-control mr-sm-2" type="search" name="query" placeholder="Search" aria-label="Search">
+                    <select id="dropdown-select" name="action" class="form-control mr-sm-2">
+                        <option value="" disabled selected>Select Action</option>
+                        <option value="3">Campaign</option>
+                    </select>
+                    <button class="btn btn-outline-success my-2 my-sm-0 ml-2" type="submit">Search</button>
+                </form>
+            </div>
+        </div>
+        <h2>Public Campaign</h2>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Campaign</th>
+                    <th>Sponsor</th>
+                    <th>Budget</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for camp in campaigns %}
+                <tr>
+                    <td>{{ camp.name|capitalize }}</td>
+                    <td>{{ camp.sponsor.username|capitalize }}</td>
+                    <td>{{ camp.budget }}</td>
+                    <td>
+                        <a href="{{ url_for('influ_send_request',campaign_id = camp.id, sponsor_id = camp.sponsor_id) }}" class="btn btn-warning">Send Request</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        // JavaScript to make flash messages disappear after 3 seconds
+        window.setTimeout(function() {
+            var messages = document.getElementById("flash-messages");
+            if (messages) {
+                messages.style.transition = "opacity 1s ease-in-out";
+                messages.style.opacity = "0";
+                setTimeout(function() {
+                    messages.remove();
+                }, 1000);
+            }
+        }, 3000);
+    </script>
+</body>
+</html>

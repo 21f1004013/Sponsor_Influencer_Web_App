@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Campaign</title>
+    <!-- Add Bootstrap CSS for styling -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation bar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="/">Influencer Engagement And Sponsorship Coordination Platform</a>
+    </nav>
+
+    <!-- Main content -->
+    <div class="container mt-5">
+        <h2 class="text-center">Edit Campaign</h2>
+        <form method="POST" action="{{ url_for('edit_campaign', campaign_id=campaign.id) }}">
+            <div class="form-group">
+                <label for="name">Campaign Name</label>
+                <input type="text" class="form-control" id="name" name="name" value="{{ campaign.name }}" required>
+            </div>
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea class="form-control" id="description" name="description" required>{{ campaign.description }}</textarea>
+            </div>
+            <div class="form-group">
+                <label for="start_date">Start Date</label>
+                <input type="date" class="form-control" id="start_date" name="start_date" value="{{ campaign.start_date.strftime('%Y-%m-%d') }}" required>
+            </div>
+            <div class="form-group">
+                <label for="end_date">End Date</label>
+                <input type="date" class="form-control" id="end_date" name="end_date" value="{{ campaign.end_date.strftime('%Y-%m-%d') }}" required>
+            </div>
+            <div class="form-group">
+                <label for="budget">Budget</label>
+                <input type="number" class="form-control" id="budget" name="budget" value="{{ campaign.budget }}" required>
+            </div>
+            <div class="form-group">
+                <label for="visibility">Visibility</label>
+                <select class="form-control" id="visibility" name="visibility" required>
+                    <option value="public" {% if campaign.visibility == 'public' %}selected{% endif %}>Public</option>
+                    <option value="private" {% if campaign.visibility == 'private' %}selected{% endif %}>Private</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Edit Campaign</button>
+        </form>
+    </div>
+
+    <!-- Add Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrap.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        // JavaScript to make flash messages disappear after 3 seconds
+        window.setTimeout(function() {
+            var messages = document.getElementById("flash-messages");
+            if (messages) {
+                messages.style.transition = "opacity 1s ease-in-out";
+                messages.style.opacity = "0";
+                setTimeout(function() {
+                    messages.remove();
+                }, 1000);
+            }
+        }, 3000);
+    </script>
+</body>
+</html>

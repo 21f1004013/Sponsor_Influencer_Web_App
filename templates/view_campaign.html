@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campaign list</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+    <div class="container mt-5">
+        <h2 class="mb-4">Campaign Details</h2>
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">{{ campaign.name|capitalize }}</h5>
+                <p class="card-text">{{ campaign.description|capitalize }}</p>
+                <p><strong>Start Date:</strong> {{ campaign.start_date.strftime('%Y-%m-%d') }}</p>
+                <p><strong>End Date:</strong> {{ campaign.end_date.strftime('%Y-%m-%d') }}</p>
+                <p><strong>Budget:</strong> ${{ campaign.budget }}</p>
+                <p><strong>Progress:</strong> {{ campaign.progress }}%</p>
+                <p><strong>Visibility:</strong> {{ campaign.visibility|capitalize }}</p>
+                <p><strong>Sponsor:</strong> {{ campaign.sponsor.username|capitalize }}</p>
+            </div>
+        </div>
+        <a href="/{{ user.role }}_dashboard" class="btn btn-secondary mt-3">Back to Dashboard</a>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        // JavaScript to make flash messages disappear after 3 seconds
+        window.setTimeout(function() {
+            var messages = document.getElementById("flash-messages");
+            if (messages) {
+                messages.style.transition = "opacity 1s ease-in-out";
+                messages.style.opacity = "0";
+                setTimeout(function() {
+                    messages.remove();
+                }, 1000);
+            }
+        }, 3000);
+    </script>
+</body>
+</html>
